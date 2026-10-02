@@ -1,0 +1,2744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>SafeScan</title>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+
+  --bg:#fafafc;
+  --card:#ffffff;
+  --tx:#1a1b2e;
+  --mut:#62647a;
+  --bd:#e3e3ee;
+
+  --ac:#5b4fe0;
+  --acs:#eeecff;
+
+  --hi:#c0392b;
+  --his:#fdeceb;
+
+  --mo:#a96800;
+  --mos:#fff3dc;
+
+  --lo:#1f7a4d;
+  --los:#e6f5ec;
+}
+
+@media (prefers-color-scheme:dark){
+
+  :root:not([data-theme="light"]){
+
+    --bg:#14141f;
+    --card:#1d1d2c;
+    --tx:#ecebf7;
+    --mut:#a3a4bd;
+    --bd:#33344a;
+
+    --ac:#9a90ff;
+    --acs:#2a2748;
+
+    --hi:#ff8b7e;
+    --his:#3a2224;
+
+    --mo:#f0b84f;
+    --mos:#3a2f18;
+
+    --lo:#6fd19b;
+    --los:#183427;
+  }
+}
+
+:root[data-theme="dark"]{
+  --bg:#14141f;
+  --card:#1d1d2c;
+  --tx:#ecebf7;
+  --mut:#a3a4bd;
+  --bd:#33344a;
+
+  --ac:#9a90ff;
+  --acs:#2a2748;
+
+  --hi:#ff8b7e;
+  --his:#3a2224;
+
+  --mo:#f0b84f;
+  --mos:#3a2f18;
+
+  --lo:#6fd19b;
+  --los:#183427;
+}
+
+html{
+  scroll-padding-top:env(safe-area-inset-top,0px);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--tx);
+  font:16px/1.55 'IBM Plex Sans',system-ui,sans-serif;
+}
+
+header{
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  background:var(--bg);
+  border-bottom:1px solid var(--bd);
+  z-index:5;
+}
+
+.bar{
+  max-width:960px;
+  margin:auto;
+  padding:12px 20px;
+  display:flex;
+  gap:8px 20px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.logo{
+  font-weight:600;
+  font-size:18px;
+  margin-right:auto;
+}
+
+nav{
+  display:flex;
+  gap:4px;
+  flex-wrap:wrap;
+}
+
+nav button{
+  background:none;
+  border:0;
+  color:var(--mut);
+  font:inherit;
+  font-size:14px;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+nav button.on{
+  background:var(--acs);
+  color:var(--ac);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+summary:focus-visible{
+  outline:2px solid var(--ac);
+  outline-offset:2px;
+}
+
+main{
+  max-width:960px;
+  margin:auto;
+  padding:32px 20px 64px;
+}
+
+h1{
+  font-size:clamp(30px,6vw,44px);
+  line-height:1.15;
+  margin:0 0 12px;
+  font-weight:600;
+}
+
+h2{
+  font-size:24px;
+  margin:0 0 6px;
+  font-weight:600;
+}
+
+h3{
+  font-size:17px;
+  margin:0 0 4px;
+  font-weight:600;
+}
+
+.mut{
+  color:var(--mut);
+}
+
+.sm{
+  font-size:14px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:14px;
+  padding:20px;
+  margin:14px 0;
+}
+
+.btn{
+  background:var(--ac);
+  color:#fff;
+  border:0;
+  border-radius:10px;
+  padding:11px 20px;
+  font:inherit;
+  font-weight:500;
+  cursor:pointer;
+}
+
+:root[data-theme="dark"] .btn{
+  color:#14141f;
+}
+
+@media (prefers-color-scheme:dark){
+
+  :root:not([data-theme="light"]) .btn{
+    color:#14141f;
+  }
+}
+
+.btn.sec{
+  background:none;
+  color:var(--ac);
+  border:1px solid var(--ac);
+}
+
+.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.field label{
+  font-size:14px;
+  color:var(--mut);
+}
+
+input[type=text],
+input[type=number],
+textarea{
+  width:100%;
+  font:inherit;
+  padding:10px 12px;
+  border:1px solid var(--bd);
+  border-radius:10px;
+  background:var(--bg);
+  color:var(--tx);
+}
+
+input[type=number]{
+  min-height:42px;
+}
+
+textarea{
+  min-height:130px;
+  resize:vertical;
+}
+
+.notice{
+  font-size:13px;
+  color:var(--mut);
+  border-left:3px solid var(--ac);
+  padding:4px 12px;
+  margin:18px 0;
+}
+
+.tag{
+  display:inline-block;
+  font-size:13px;
+  padding:2px 10px;
+  border-radius:99px;
+  background:var(--acs);
+  color:var(--ac);
+  margin:2px 4px 2px 0;
+}
+
+.status{
+  min-height:24px;
+  margin-top:15px;
+}
+
+.res{
+  text-align:center;
+  padding:32px 20px;
+}
+
+.res .lvl{
+  font-size:40px;
+  font-weight:600;
+  margin:6px 0;
+}
+
+.HIGH{
+  color:var(--hi);
+}
+
+.MODERATE{
+  color:var(--mo);
+}
+
+.LOW{
+  color:var(--lo);
+}
+
+.pill{
+  font-size:12px;
+  padding:2px 9px;
+  border-radius:99px;
+  font-weight:500;
+}
+
+.pill.HIGH{
+  background:var(--his);
+}
+
+.pill.MODERATE{
+  background:var(--mos);
+}
+
+.pill.LOW{
+  background:var(--los);
+}
+
+.dot{
+  display:inline-block;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  margin-right:8px;
+}
+
+.dot.high{
+  background:var(--hi);
+}
+
+.dot.moderate{
+  background:var(--mo);
+}
+
+.dot.low{
+  background:var(--lo);
+}
+
+.flow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:center;
+  font-size:14px;
+}
+
+.flow span.s{
+  background:var(--acs);
+  color:var(--ac);
+  padding:4px 10px;
+  border-radius:8px;
+}
+
+.chain{
+  font-size:14px;
+  color:var(--mut);
+  margin-top:8px;
+}
+
+.chain b{
+  color:var(--tx);
+  font-weight:500;
+}
+
+.hist{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+  font-size:14px;
+}
+
+td,
+th{
+  border-bottom:1px solid var(--bd);
+  padding:8px;
+  text-align:left;
+}
+
+.scroll{
+  overflow-x:auto;
+}
+
+details summary{
+  cursor:pointer;
+  font-weight:500;
+}
+
+.probability{
+  margin:12px 0;
+}
+
+.probability-header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:5px;
+}
+
+.progress{
+  width:100%;
+  height:9px;
+  background:var(--bd);
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  background:var(--ac);
+  border-radius:99px;
+}
+
+.feature-value{
+  font-weight:500;
+}
+
+.success{
+  color:var(--lo);
+}
+
+.error{
+  color:var(--hi);
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="bar">
+
+    <div class="logo">
+      SafeScan
+    </div>
+
+    <nav id="nav"></nav>
+
+  </div>
+
+</header>
+
+<main id="app"></main>
+
+<script>
+
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
+
+/*
+   Your FastAPI backend is running at:
+
+   http://127.0.0.1:8000
+
+   Endpoint:
+
+   POST /api/predict
+
+   Therefore the complete API URL is:
+*/
+
+const API_URL = "http://127.0.0.1:8000/api/predict";
+
+
+/* =========================================================
+   MODEL FEATURES
+   IMPORTANT:
+   This order MUST match the order used during training.
+   ========================================================= */
+
+const FEATURES = [
+  "calories",
+  "carbs_g",
+  "calcium_mg",
+  "fat_g",
+  "protein_g",
+  "saturated_fat_g",
+  "vitamin_c_mg",
+  "fiber_g",
+  "iron_mg",
+  "sodium_mg",
+  "sugar_g",
+  "cholesterol_mg"
+];
+
+
+/* Human-readable names */
+
+const FEATURE_LABELS = {
+
+  calories:"Calories",
+
+  carbs_g:"Carbohydrates",
+
+  calcium_mg:"Calcium",
+
+  fat_g:"Total Fat",
+
+  protein_g:"Protein",
+
+  saturated_fat_g:"Saturated Fat",
+
+  vitamin_c_mg:"Vitamin C",
+
+  fiber_g:"Fiber",
+
+  iron_mg:"Iron",
+
+  sodium_mg:"Sodium",
+
+  sugar_g:"Sugar",
+
+  cholesterol_mg:"Cholesterol"
+
+};
+
+
+/* Units */
+
+const FEATURE_UNITS = {
+
+  calories:"kcal",
+
+  carbs_g:"g",
+
+  calcium_mg:"mg",
+
+  fat_g:"g",
+
+  protein_g:"g",
+
+  saturated_fat_g:"g",
+
+  vitamin_c_mg:"mg",
+
+  fiber_g:"g",
+
+  iron_mg:"mg",
+
+  sodium_mg:"mg",
+
+  sugar_g:"g",
+
+  cholesterol_mg:"mg"
+
+};
+
+
+/* =========================================================
+   RISK LABELS
+   ========================================================= */
+
+const RISK_CLASSES = {
+
+  "High Risk":"HIGH",
+
+  "Moderate Risk":"MODERATE",
+
+  "Low Risk":"LOW"
+
+};
+
+
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
+
+function esc(value){
+
+  return String(value).replace(
+    /[&<>"]/g,
+    c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;"
+    }[c])
+  );
+
+}
+
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
+const mem = {};
+
+const store = {
+
+  get(key, defaultValue){
+
+    try{
+
+      const value =
+        localStorage.getItem(key);
+
+      return value
+        ? JSON.parse(value)
+        : (mem[key] ?? defaultValue);
+
+    }catch(error){
+
+      return mem[key] ?? defaultValue;
+
+    }
+
+  },
+
+  set(key,value){
+
+    mem[key] = value;
+
+    try{
+
+      localStorage.setItem(
+        key,
+        JSON.stringify(value)
+      );
+
+    }catch(error){
+
+      console.warn(
+        "localStorage unavailable",
+        error
+      );
+
+    }
+
+  }
+
+};
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+const emptyProfile = {
+
+  allergies:[],
+
+  concerns:[],
+
+  diet:[],
+
+  saved:false
+
+};
+
+let profile = {
+
+  ...emptyProfile,
+
+  ...store.get(
+    "ss_profile",
+    {}
+  )
+
+};
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+   ========================================================= */
+
+const app =
+  document.getElementById("app");
+
+const nav =
+  document.getElementById("nav");
+
+
+const TABS = [
+
+  ["home","Home"],
+
+  ["profile","Health Profile"],
+
+  ["analyze","Analyze"],
+
+  ["history","History"],
+
+  ["model","About Model"]
+
+];
+
+
+let current = "home";
+
+
+let lastDraft = {
+
+  name:"",
+
+  values:{}
+
+};
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function go(view,arg){
+
+  current = view;
+
+  nav.innerHTML =
+    TABS.map(
+      ([key,label]) => `
+
+        <button
+          data-go="${key}"
+          class="${
+            key === view ||
+            (view === "result" && key === "analyze")
+              ? "on"
+              : ""
+          }"
+        >
+          ${label}
+        </button>
+
+      `
+    ).join("");
+
+  views[view](arg);
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const target =
+      event.target.closest(
+        "[data-go]"
+      );
+
+    if(target){
+
+      go(
+        target.dataset.go
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   NOTICE
+   ========================================================= */
+
+const NOTICE = `
+
+<p class="notice">
+
+  SafeScan is a research/demo tool.
+  It does not diagnose medical conditions
+  or replace professional medical advice.
+
+</p>
+
+`;
+
+
+/* =========================================================
+   FLOW
+   ========================================================= */
+
+function FLOW(steps){
+
+  return `
+
+    <div class="flow">
+
+      ${steps.map(
+        (step,index) =>
+
+          (index
+            ? '<span class="mut">→</span>'
+            : '') +
+
+          `<span class="s">
+            ${esc(step)}
+          </span>`
+
+      ).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   BACKEND PREDICTION
+   ========================================================= */
+
+async function bilstmPredict(values){
+
+  const response =
+    await fetch(
+      API_URL,
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "application/json"
+        },
+
+        body:JSON.stringify(values)
+
+      }
+    );
+
+
+  if(!response.ok){
+
+    let message =
+      `Backend returned HTTP ${response.status}`;
+
+    try{
+
+      const errorData =
+        await response.json();
+
+      if(errorData.detail){
+
+        message =
+          Array.isArray(errorData.detail)
+            ? errorData.detail
+                .map(x =>
+                  x.msg || String(x)
+                )
+                .join(", ")
+            : String(errorData.detail);
+
+      }
+
+    }catch(error){
+
+      /* Keep default error */
+
+    }
+
+    throw new Error(message);
+
+  }
+
+
+  return await response.json();
+
+}
+
+
+/* =========================================================
+   PROFILE NOTES
+   ========================================================= */
+
+function calculateProfileNotes(values){
+
+  const notes = [];
+
+
+  if(
+    profile.concerns.includes("high sugar") &&
+    values.sugar_g >= 10
+  ){
+
+    notes.push(
+      "Sugar content may be relevant to your selected high-sugar concern."
+    );
+
+  }
+
+
+  if(
+    profile.concerns.includes("high sodium") &&
+    values.sodium_mg >= 300
+  ){
+
+    notes.push(
+      "Sodium content may be relevant to your selected high-sodium concern."
+    );
+
+  }
+
+
+  if(
+    profile.concerns.includes("high fat") &&
+    values.fat_g >= 10
+  ){
+
+    notes.push(
+      "Total fat content may be relevant to your selected high-fat concern."
+    );
+
+  }
+
+
+  if(
+    profile.concerns.includes(
+      "diabetes-related concern"
+    ) &&
+    values.sugar_g >= 10
+  ){
+
+    notes.push(
+      "Sugar is shown because you selected a diabetes-related concern."
+    );
+
+  }
+
+
+  if(
+    profile.concerns.includes(
+      "hypertension-related concern"
+    ) &&
+    values.sodium_mg >= 300
+  ){
+
+    notes.push(
+      "Sodium is shown because you selected a hypertension-related concern."
+    );
+
+  }
+
+
+  return notes;
+
+}
+
+
+/* =========================================================
+   DETERMINE DISPLAY LEVEL
+   ========================================================= */
+
+function normalizeLevel(prediction){
+
+  if(!prediction){
+
+    return "MODERATE";
+
+  }
+
+
+  const text =
+    String(prediction)
+      .toLowerCase();
+
+
+  if(text.includes("high")){
+
+    return "HIGH";
+
+  }
+
+
+  if(text.includes("low")){
+
+    return "LOW";
+
+  }
+
+
+  return "MODERATE";
+
+}
+
+
+/* =========================================================
+   VIEWS
+   ========================================================= */
+
+const views = {
+
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
+home(){
+
+  app.innerHTML = `
+
+    <h1>
+      Know what's in your product before you use it.
+    </h1>
+
+    <p
+      class="mut"
+      style="max-width:60ch;font-size:18px"
+    >
+
+      Analyze nutritional information using the
+      trained SafeScan BiLSTM model and view the
+      predicted product risk.
+
+    </p>
+
+
+    <div class="row">
+
+      <button
+        class="btn"
+        data-go="analyze"
+      >
+        Analyze a Product
+      </button>
+
+
+      <button
+        class="btn sec"
+        data-go="profile"
+      >
+        Create Health Profile
+      </button>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-top:36px"
+    >
+
+      <h3>
+        How SafeScan works
+      </h3>
+
+      <p class="mut sm">
+
+        Enter the nutritional values from a
+        product label. The values are sent to
+        the trained BiLSTM model, which returns
+        a risk classification and confidence.
+
+      </p>
+
+
+      ${FLOW([
+        "Nutrition Label",
+        "12 Features",
+        "Preprocessing",
+        "BiLSTM",
+        "Risk Prediction",
+        "Confidence",
+        "Result"
+      ])}
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        What the model receives
+      </h3>
+
+      <p class="mut sm">
+
+        The trained model expects exactly
+        12 nutritional features in the
+        same order used during training.
+
+      </p>
+
+      <div class="scroll">
+
+        <table>
+
+          <tr>
+            <th>#</th>
+            <th>Feature</th>
+            <th>Unit</th>
+          </tr>
+
+          ${
+            FEATURES.map(
+              (feature,index) => `
+
+                <tr>
+
+                  <td>
+                    ${index + 1}
+                  </td>
+
+                  <td>
+                    ${FEATURE_LABELS[feature]}
+                  </td>
+
+                  <td>
+                    ${FEATURE_UNITS[feature]}
+                  </td>
+
+                </tr>
+
+              `
+            ).join("")
+          }
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    ${NOTICE}
+
+  `;
+
+},
+
+
+/* =========================================================
+   HEALTH PROFILE
+   ========================================================= */
+
+profile(){
+
+  const concerns = [
+
+    "High sugar",
+
+    "High sodium",
+
+    "High fat",
+
+    "Diabetes-related concern",
+
+    "Hypertension-related concern"
+
+  ];
+
+
+  app.innerHTML = `
+
+    <h2>
+      Your Health Profile
+    </h2>
+
+    <p class="mut">
+
+      Select the health-related concerns that
+      should be considered when interpreting
+      your result.
+
+    </p>
+
+
+    <div class="card">
+
+      <h3>
+        Health Concerns
+      </h3>
+
+      <div class="grid">
+
+        ${
+          concerns.map(
+            concern => {
+
+              const value =
+                concern.toLowerCase();
+
+              return `
+
+                <label class="ck">
+
+                  <input
+                    type="checkbox"
+                    data-concern="${esc(value)}"
+                    ${
+                      profile.concerns.includes(value)
+                        ? "checked"
+                        : ""
+                    }
+                  >
+
+                  ${esc(concern)}
+
+                </label>
+
+              `;
+
+            }
+          ).join("")
+        }
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        Dietary Preferences
+      </h3>
+
+      <div class="grid">
+
+        ${
+          [
+            "Vegetarian",
+            "Vegan",
+            "Gluten-free",
+            "Lactose-free"
+          ].map(
+            diet => {
+
+              const value =
+                diet.toLowerCase();
+
+              return `
+
+                <label class="ck">
+
+                  <input
+                    type="checkbox"
+                    data-diet="${esc(value)}"
+                    ${
+                      profile.diet.includes(value)
+                        ? "checked"
+                        : ""
+                    }
+                  >
+
+                  ${esc(diet)}
+
+                </label>
+
+              `;
+
+            }
+          ).join("")
+        }
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="btn"
+      id="saveProfile"
+    >
+      Save Health Profile
+    </button>
+
+    <span
+      id="profileMsg"
+      class="sm mut"
+    ></span>
+
+
+    ${NOTICE}
+
+  `;
+
+
+  document.getElementById(
+    "saveProfile"
+  ).onclick = () => {
+
+    profile.concerns =
+      [
+        ...app.querySelectorAll(
+          "[data-concern]:checked"
+        )
+      ].map(
+        input =>
+          input.dataset.concern
+      );
+
+
+    profile.diet =
+      [
+        ...app.querySelectorAll(
+          "[data-diet]:checked"
+        )
+      ].map(
+        input =>
+          input.dataset.diet
+      );
+
+
+    profile.saved = true;
+
+
+    store.set(
+      "ss_profile",
+      profile
+    );
+
+
+    document.getElementById(
+      "profileMsg"
+    ).textContent =
+      " Saved successfully.";
+
+  };
+
+},
+
+
+/* =========================================================
+   ANALYZE
+   ========================================================= */
+
+analyze(){
+
+  const fields = [
+
+    [
+      "calories",
+      "Calories",
+      "kcal",
+      "250"
+    ],
+
+    [
+      "carbs_g",
+      "Carbohydrates",
+      "g",
+      "30"
+    ],
+
+    [
+      "calcium_mg",
+      "Calcium",
+      "mg",
+      "100"
+    ],
+
+    [
+      "fat_g",
+      "Total Fat",
+      "g",
+      "10"
+    ],
+
+    [
+      "protein_g",
+      "Protein",
+      "g",
+      "8"
+    ],
+
+    [
+      "saturated_fat_g",
+      "Saturated Fat",
+      "g",
+      "3"
+    ],
+
+    [
+      "vitamin_c_mg",
+      "Vitamin C",
+      "mg",
+      "10"
+    ],
+
+    [
+      "fiber_g",
+      "Fiber",
+      "g",
+      "3"
+    ],
+
+    [
+      "iron_mg",
+      "Iron",
+      "mg",
+      "2"
+    ],
+
+    [
+      "sodium_mg",
+      "Sodium",
+      "mg",
+      "300"
+    ],
+
+    [
+      "sugar_g",
+      "Sugar",
+      "g",
+      "12"
+    ],
+
+    [
+      "cholesterol_mg",
+      "Cholesterol",
+      "mg",
+      "20"
+    ]
+
+  ];
+
+
+  app.innerHTML = `
+
+    <h2>
+      Analyze a Product
+    </h2>
+
+
+    <p class="mut">
+
+      Enter the nutritional values exactly
+      as shown on the product's nutrition label.
+
+    </p>
+
+
+    <div class="card">
+
+      <div class="field">
+
+        <label for="productName">
+          Product Name
+        </label>
+
+        <input
+          type="text"
+          id="productName"
+          placeholder="Chocolate Biscuit"
+          value="${esc(lastDraft.name)}"
+        >
+
+      </div>
+
+
+      <h3 style="margin-top:24px">
+        Nutritional Information
+      </h3>
+
+
+      <p class="mut sm">
+
+        Enter the values using the units
+        shown beside each field.
+
+      </p>
+
+
+      <div class="grid">
+
+        ${
+          fields.map(
+            ([id,label,unit,example]) => `
+
+              <div class="field">
+
+                <label for="${id}">
+                  ${label} (${unit})
+                </label>
+
+                <input
+                  type="number"
+                  id="${id}"
+                  min="0"
+                  step="any"
+                  placeholder="${example}"
+                  value="${
+                    lastDraft.values?.[id] ?? ""
+                  }"
+                >
+
+              </div>
+
+            `
+          ).join("")
+        }
+
+      </div>
+
+
+      <div class="row">
+
+        <button
+          class="btn"
+          id="analyzeBtn"
+        >
+          Analyze with BiLSTM
+        </button>
+
+
+        <button
+          class="btn sec"
+          id="exampleBtn"
+        >
+          Use Example
+        </button>
+
+      </div>
+
+
+      <p
+        id="status"
+        class="status sm mut"
+      ></p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        Model Input
+      </h3>
+
+      <p class="mut sm">
+
+        The trained BiLSTM expects exactly
+        12 nutritional features in the
+        training order.
+
+      </p>
+
+
+      <div class="scroll">
+
+        <table>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>Feature</th>
+
+            <th>Unit</th>
+
+          </tr>
+
+
+          ${
+            FEATURES.map(
+              (feature,index) => `
+
+                <tr>
+
+                  <td>
+                    ${index + 1}
+                  </td>
+
+                  <td>
+                    ${feature}
+                  </td>
+
+                  <td>
+                    ${FEATURE_UNITS[feature]}
+                  </td>
+
+                </tr>
+
+              `
+            ).join("")
+          }
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    ${NOTICE}
+
+  `;
+
+
+  /* =====================================================
+     EXAMPLE BUTTON
+     ===================================================== */
+
+  document.getElementById(
+    "exampleBtn"
+  ).onclick = () => {
+
+    const example = {
+
+      calories:250,
+
+      carbs_g:30,
+
+      calcium_mg:100,
+
+      fat_g:10,
+
+      protein_g:8,
+
+      saturated_fat_g:3,
+
+      vitamin_c_mg:10,
+
+      fiber_g:3,
+
+      iron_mg:2,
+
+      sodium_mg:300,
+
+      sugar_g:12,
+
+      cholesterol_mg:20
+
+    };
+
+
+    document.getElementById(
+      "productName"
+    ).value =
+      "Chocolate Biscuit";
+
+
+    for(
+      const feature of FEATURES
+    ){
+
+      document.getElementById(
+        feature
+      ).value =
+        example[feature];
+
+    }
+
+  };
+
+
+  /* =====================================================
+     ANALYZE BUTTON
+     ===================================================== */
+
+  document.getElementById(
+    "analyzeBtn"
+  ).onclick = async () => {
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+
+    const productName =
+      document.getElementById(
+        "productName"
+      ).value.trim()
+      ||
+      "Untitled Product";
+
+
+    const values = {};
+
+
+    try{
+
+      /* -----------------------------------------------
+         VALIDATE ALL 12 FEATURES
+         ----------------------------------------------- */
+
+      for(
+        const feature of FEATURES
+      ){
+
+        const input =
+          document.getElementById(
+            feature
+          );
+
+
+        const rawValue =
+          input.value.trim();
+
+
+        const value =
+          Number(rawValue);
+
+
+        if(
+          rawValue === "" ||
+          !Number.isFinite(value)
+        ){
+
+          throw new Error(
+            `Please enter a valid value for ${
+              FEATURE_LABELS[feature]
+            }.`
+          );
+
+        }
+
+
+        if(value < 0){
+
+          throw new Error(
+            `${
+              FEATURE_LABELS[feature]
+            } cannot be negative.`
+          );
+
+        }
+
+
+        values[feature] =
+          value;
+
+      }
+
+
+      /* -----------------------------------------------
+         SAVE CURRENT INPUT
+         ----------------------------------------------- */
+
+      lastDraft = {
+
+        name:productName,
+
+        values:values
+
+      };
+
+
+      /* -----------------------------------------------
+         BACKEND REQUEST
+         ----------------------------------------------- */
+
+      status.textContent =
+        "Connecting to SafeScan backend...";
+
+
+      const result =
+        await bilstmPredict(
+          values
+        );
+
+
+      console.log(
+        "SafeScan backend response:",
+        result
+      );
+
+
+      status.textContent =
+        "Prediction received. Preparing result...";
+
+
+      /* -----------------------------------------------
+         PROFILE INFORMATION
+         ----------------------------------------------- */
+
+      const profileNotes =
+        calculateProfileNotes(
+          values
+        );
+
+
+      /* -----------------------------------------------
+         CREATE HISTORY RECORD
+         ----------------------------------------------- */
+
+      const record = {
+
+        id:Date.now(),
+
+        name:productName,
+
+        date:new Date()
+          .toISOString(),
+
+        values:values,
+
+        prediction:
+          result.prediction,
+
+        confidence:
+          result.confidence,
+
+        probabilities:
+          result.probabilities,
+
+        features_used:
+          result.features_used,
+
+        profileNotes:
+          profileNotes
+
+      };
+
+
+      /* -----------------------------------------------
+         SAVE HISTORY
+         ----------------------------------------------- */
+
+      const history =
+        store.get(
+          "ss_hist",
+          []
+        );
+
+
+      history.unshift(
+        record
+      );
+
+
+      store.set(
+        "ss_hist",
+        history.slice(
+          0,
+          30
+        )
+      );
+
+
+      /* -----------------------------------------------
+         SHOW RESULT
+         ----------------------------------------------- */
+
+      go(
+        "result",
+        record
+      );
+
+
+    }catch(error){
+
+      console.error(
+        "SafeScan prediction error:",
+        error
+      );
+
+
+      status.textContent =
+        "Prediction failed: " +
+        error.message;
+
+
+      status.classList.add(
+        "error"
+      );
+
+    }
+
+  };
+
+},
+
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+result(record){
+
+  const level =
+    normalizeLevel(
+      record.prediction
+    );
+
+
+  const confidence =
+    Number(
+      record.confidence || 0
+    );
+
+
+  const confidencePercent =
+    confidence <= 1
+      ? confidence * 100
+      : confidence;
+
+
+  let levelText;
+
+
+  if(level === "HIGH"){
+
+    levelText =
+      "High Risk";
+
+  }else if(level === "LOW"){
+
+    levelText =
+      "Low Risk";
+
+  }else{
+
+    levelText =
+      "Moderate Risk";
+
+  }
+
+
+  /* -------------------------------------------------------
+     PROBABILITIES
+     ------------------------------------------------------- */
+
+  const probabilities =
+    record.probabilities || {};
+
+
+  const probabilityRows =
+    Object.entries(
+      probabilities
+    ).map(
+      ([label,value]) => {
+
+        const numeric =
+          Number(value);
+
+
+        const percent =
+          numeric <= 1
+            ? numeric * 100
+            : numeric;
+
+
+        return `
+
+          <div class="probability">
+
+            <div class="probability-header">
+
+              <span>
+                ${esc(label)}
+              </span>
+
+              <b>
+                ${percent.toFixed(2)}%
+              </b>
+
+            </div>
+
+
+            <div class="progress">
+
+              <div
+                class="progress-fill"
+                style="width:${Math.min(
+                  100,
+                  Math.max(
+                    0,
+                    percent
+                  )
+                )}%"
+              ></div>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+
+  /* -------------------------------------------------------
+     FEATURES USED
+     ------------------------------------------------------- */
+
+  const featuresUsed =
+    record.features_used &&
+    typeof record.features_used === "object"
+      ? record.features_used
+      : {};
+
+  const featureOrder =
+    FEATURES.filter(feature =>
+      Object.prototype.hasOwnProperty.call(
+        featuresUsed,
+        feature
+      )
+    );
+
+
+  const featureRows =
+    FEATURES.map(
+      feature => {
+
+        const value =
+          record.values[
+            feature
+          ];
+
+
+        return `
+
+          <tr>
+
+            <td>
+              ${FEATURE_LABELS[feature]}
+            </td>
+
+            <td class="feature-value">
+              ${value}
+            </td>
+
+            <td>
+              ${FEATURE_UNITS[feature]}
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    ).join("");
+
+
+  app.innerHTML = `
+
+    <p class="mut sm">
+
+      ${esc(record.name)}
+
+      ·
+
+      ${new Date(
+        record.date
+      ).toLocaleString()}
+
+    </p>
+
+
+    <!-- ===============================================
+         MAIN RESULT
+         =============================================== -->
+
+    <div class="card res">
+
+      <div class="mut sm">
+        SafeScan BiLSTM Prediction
+      </div>
+
+
+      <div class="lvl ${level}">
+        ${levelText}
+      </div>
+
+
+      <div class="mut">
+
+        Model prediction:
+        <b>
+          ${esc(record.prediction)}
+        </b>
+
+      </div>
+
+
+      <div
+        class="mut"
+        style="margin-top:8px"
+      >
+
+        Confidence:
+        <b>
+          ${confidencePercent.toFixed(2)}%
+        </b>
+
+      </div>
+
+
+      <div class="row"
+           style="justify-content:center">
+
+        <button
+          class="btn"
+          onclick="
+            document
+              .getElementById('probabilities')
+              .scrollIntoView({
+                behavior:'smooth'
+              })
+          "
+        >
+          View Details
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===============================================
+         PROBABILITIES
+         =============================================== -->
+
+    <div
+      class="card"
+      id="probabilities"
+    >
+
+      <h3>
+        Prediction Probabilities
+      </h3>
+
+
+      <p class="mut sm">
+
+        These values show the probability
+        assigned by the model to each class.
+
+      </p>
+
+
+      ${probabilityRows}
+
+    </div>
+
+
+    <!-- ===============================================
+         MODEL INPUT
+         =============================================== -->
+
+    <div class="card">
+
+      <h3>
+        Nutritional Values Used
+      </h3>
+
+
+      <p class="mut sm">
+
+        These are the 12 values sent
+        to the trained model.
+
+      </p>
+
+
+      <div class="scroll">
+
+        <table>
+
+          <tr>
+
+            <th>
+              Feature
+            </th>
+
+            <th>
+              Value
+            </th>
+
+            <th>
+              Unit
+            </th>
+
+          </tr>
+
+          ${featureRows}
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===============================================
+         FEATURES USED BY BACKEND
+         =============================================== -->
+
+    <div class="card">
+
+      <h3>
+        Model Features
+      </h3>
+
+
+      <p class="mut sm">
+
+        Feature order received from the backend.
+
+      </p>
+
+
+      <div class="scroll">
+
+        <table>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>Feature</th>
+
+          </tr>
+
+
+          ${
+            featureOrder.map(
+              (feature,index) => `
+
+                <tr>
+
+                  <td>
+                    ${index + 1}
+                  </td>
+
+                  <td>
+                    ${esc(FEATURE_LABELS[feature] || feature)}
+                  </td>
+
+                </tr>
+
+              `
+            ).join("")
+          }
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===============================================
+         PROFILE NOTES
+         =============================================== -->
+
+    ${
+      record.profileNotes &&
+      record.profileNotes.length
+
+        ? `
+
+          <div class="card">
+
+            <h3>
+              Health Profile Notes
+            </h3>
+
+            ${
+              record.profileNotes
+                .map(
+                  note => `
+
+                    <p>
+                      <span class="dot moderate"></span>
+                      ${esc(note)}
+                    </p>
+
+                  `
+                )
+                .join("")
+            }
+
+          </div>
+
+        `
+
+        : ""
+
+    }
+
+
+    <!-- ===============================================
+         PIPELINE
+         =============================================== -->
+
+    <div class="card">
+
+      <h3>
+        How SafeScan reached this result
+      </h3>
+
+
+      <p class="mut sm">
+
+        The nutritional information follows
+        this processing pipeline:
+
+      </p>
+
+
+      ${FLOW([
+        "Nutrition Label",
+        "12 Features",
+        "Input Validation",
+        "BiLSTM",
+        "Class Probabilities",
+        "Final Prediction"
+      ])}
+
+    </div>
+
+
+    <!-- ===============================================
+         MODEL INTERPRETATION
+         =============================================== -->
+
+    <div class="card">
+
+      <h3>
+        Result Interpretation
+      </h3>
+
+
+      <p class="mut sm">
+
+        The classification shown above is the
+        output of the trained SafeScan BiLSTM
+        model for the nutritional values entered.
+
+        Confidence represents the model's output
+        probability for the predicted class.
+
+      </p>
+
+    </div>
+
+
+    <div class="row">
+
+      <button
+        class="btn"
+        data-go="analyze"
+      >
+        Analyze Another Product
+      </button>
+
+
+      <button
+        class="btn sec"
+        data-go="history"
+      >
+        View History
+      </button>
+
+    </div>
+
+
+    ${NOTICE}
+
+  `;
+
+},
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+history(){
+
+  const history =
+    store.get(
+      "ss_hist",
+      []
+    );
+
+
+  app.innerHTML = `
+
+    <h2>
+      Analysis History
+    </h2>
+
+
+    <p class="mut">
+      Previous analyses are stored locally
+      in this browser.
+    </p>
+
+
+    ${
+      history.length
+
+        ? history.map(
+            (record,index) => {
+
+              const level =
+                normalizeLevel(
+                  record.prediction
+                );
+
+
+              return `
+
+                <div class="card hist">
+
+                  <div>
+
+                    <h3>
+                      ${esc(record.name)}
+                    </h3>
+
+                    <span class="mut sm">
+
+                      ${
+                        new Date(
+                          record.date
+                        ).toLocaleString()
+                      }
+
+                      ·
+
+                      Confidence:
+                      ${
+                        (
+                          Number(
+                            record.confidence || 0
+                          ) *
+                          100
+                        ).toFixed(2)
+                      }%
+
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <span
+                      class="pill ${level}"
+                    >
+                      ${esc(
+                        record.prediction
+                      )}
+                    </span>
+
+
+                    <button
+                      class="btn sec"
+                      data-open="${index}"
+                    >
+                      Open
+                    </button>
+
+                  </div>
+
+                </div>
+
+              `;
+
+            }
+          ).join("")
+
+        : `
+
+          <div class="card mut">
+
+            No analyses yet.
+            Run an analysis from the
+            Analyze page.
+
+          </div>
+
+        `
+
+    }
+
+  `;
+
+
+  app.onclick =
+    event => {
+
+      const index =
+        event.target.dataset.open;
+
+
+      if(index !== undefined){
+
+        go(
+          "result",
+          history[
+            Number(index)
+          ]
+        );
+
+      }
+
+    };
+
+},
+
+
+/* =========================================================
+   ABOUT MODEL
+   ========================================================= */
+
+model(){
+
+  app.innerHTML = `
+
+    <h2>
+      About SafeScan Model
+    </h2>
+
+
+    <p class="mut">
+
+      SafeScan uses a trained Bidirectional
+      Long Short-Term Memory neural network
+      for nutritional risk classification.
+
+    </p>
+
+
+    <div class="card">
+
+      <details open>
+
+        <summary>
+          Model Information
+        </summary>
+
+
+        <table style="margin-top:10px">
+
+          <tr>
+
+            <td>
+              Model
+            </td>
+
+            <td>
+              BiLSTM
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Architecture
+            </td>
+
+            <td>
+              Bidirectional Long Short-Term Memory
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Input
+            </td>
+
+            <td>
+              12 nutritional features
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Output
+            </td>
+
+            <td>
+              High Risk / Moderate Risk / Low Risk
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Backend
+            </td>
+
+            <td>
+              FastAPI
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Endpoint
+            </td>
+
+            <td>
+              POST /api/predict
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Model status
+            </td>
+
+            <td class="success">
+              Connected to backend
+            </td>
+
+          </tr>
+
+        </table>
+
+      </details>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        Input Features
+      </h3>
+
+
+      <div class="scroll">
+
+        <table>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>Feature</th>
+
+            <th>Unit</th>
+
+          </tr>
+
+
+          ${
+            FEATURES.map(
+              (feature,index) => `
+
+                <tr>
+
+                  <td>
+                    ${index + 1}
+                  </td>
+
+                  <td>
+                    ${feature}
+                  </td>
+
+                  <td>
+                    ${FEATURE_UNITS[feature]}
+                  </td>
+
+                </tr>
+
+              `
+            ).join("")
+          }
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>
+        SafeScan Processing Pipeline
+      </h3>
+
+
+      ${FLOW([
+
+        "Nutrition Label",
+
+        "Feature Extraction",
+
+        "12-Dimensional Input",
+
+        "BiLSTM",
+
+        "Probability Distribution",
+
+        "Risk Classification"
+
+      ])}
+
+    </div>
+
+
+    ${NOTICE}
+
+  `;
+
+}
+
+};
+
+
+/* =========================================================
+   START APPLICATION
+   ========================================================= */
+
+go("home");
+
+</script>
+
+</body>
+</html>
