@@ -1,0 +1,35 @@
+{
+  "model_name": "SafeScan_BiLSTM",
+  "task": "3-class nutritional risk classification",
+  "classes": [
+    "High Risk",
+    "Low Risk",
+    "Moderate Risk"
+  ],
+  "features": [
+    "calories",
+    "carbs_g",
+    "calcium_mg",
+    "fat_g",
+    "protein_g",
+    "saturated_fat_g",
+    "vitamin_c_mg",
+    "fiber_g",
+    "iron_mg",
+    "sodium_mg",
+    "sugar_g",
+    "cholesterol_mg"
+  ],
+  "input_shape": [
+    12,
+    1
+  ],
+  "output_classes": 3,
+  "preprocessing": {
+    "missing_values": "replace with training-set feature median",
+    "scaler": "StandardScaler fitted on X_train only",
+    "reshape": "[samples, 12] -> [samples, 12, 1]"
+  },
+  "training_split": "70/15/15 stratified",
+  "random_seed": 42
+}
